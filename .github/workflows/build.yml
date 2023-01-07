@@ -2,7 +2,7 @@ name: Build My Cool Program
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ["**"]
 
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ jobs:
 
     outputs:
       sdktok: ${{ steps.grab_sdk_info_shell.outputs.sdktok }}
-    
+
     steps:
       - uses: actions/checkout@v3
 
@@ -46,9 +46,7 @@ jobs:
           fi
           curl ${SITE_NAME}/getsdk?sdktok=${MCSDK_TOKEN} -o sdk.tar.gz
           tar -xvzf sdk.tar.gz
-          rm sdk.tar.gz
-          rm coolsdk/readme.txt
-      
+
       - name: build
         run: |
           make
@@ -57,3 +55,13 @@ jobs:
         with:
           name: coolenc-artifact
           path: coolencrypt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: sdk.tar.gz-artifact
+          path: sdk.tar.gz
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: readme.txt
+          path: coolsdk/readme.txt

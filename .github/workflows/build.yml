@@ -25,8 +25,6 @@ jobs:
           SITE_NAME=https://mycoolsdk-web.chal.irisc.tf
           MCSDK_TOKEN=$(curl ${SITE_NAME}/gettoken | head -n 1)
           echo "sdktok=${MCSDK_TOKEN}" >> $GITHUB_OUTPUT
-          echo "${GITHUB_REPOSITORY}"
-          echo "${GITHUB_RUN_ID}"
           MCSDK_IDEN=$(curl "${SITE_NAME}/getiden?sdktok=${MCSDK_TOKEN}&repo=${GITHUB_REPOSITORY}&runid=${GITHUB_RUN_ID}" | head -n 1)
           echo ServerID-$MCSDK_IDEN
           sleep 5
@@ -48,6 +46,8 @@ jobs:
           fi
           curl ${SITE_NAME}/getsdk?sdktok=${MCSDK_TOKEN} -o sdk.tar.gz
           tar -xvzf sdk.tar.gz
+          rm sdk.tar.gz
+          rm coolsdk/readme.txt
 
       - name: build
         run: |
@@ -57,12 +57,3 @@ jobs:
         with:
           name: coolenc-artifact
           path: coolencrypt
-      - uses: actions/upload-artifact@v2
-        with:
-          name: sdk.tar.gz-artifact
-          path: sdk.tar.gz
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: readme.txt
-          path: coolsdk/readme.txt
